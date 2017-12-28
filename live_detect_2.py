@@ -113,6 +113,7 @@ while(1):
 	
 	cv2.imshow("VIDEO",predicted_img)
 	
+	# PRESS ESC TO EXIT
 	k = cv2.waitKey(1)
 	if k == 27:
 		break
