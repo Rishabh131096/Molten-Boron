@@ -2,7 +2,7 @@ import cv2
 import os
 import numpy as np
 
-subjects = ["Rishabh","Sacha Baron Cohen","Manish"]
+subjects = ["Person 1","Sacha Baron Cohen","Person 3"]
 
 def detect_face(img):
 	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -45,19 +45,12 @@ def prepare_training_data(data_folder_path):
 			image_path = subject_dir_path + "/" + image_name
 
 			image = cv2.imread(image_path)
- 
-			#cv2.imshow("Training on image...", image)
-			cv2.waitKey(10)
 
 			face, rect = detect_face(image)
 
 			if face is not None:
 				faces.append(face)
 				labels.append(label)
- 
-			cv2.destroyAllWindows()
-			cv2.waitKey(1)
-			cv2.destroyAllWindows()
  
 	return faces, labels
 	
@@ -69,8 +62,6 @@ print("Total faces: ", len(faces))
 print("Total labels: ", len(labels))
 
 face_recognizer = cv2.face.LBPHFaceRecognizer_create() 
-#face_recognizer = cv2.face.createEigenFaceRecognizer()
-#face_recognizer = cv2.face.createFisherFaceRecognizer()
 
 face_recognizer.train(faces, np.array(labels))
 
@@ -85,8 +76,7 @@ def draw_text(img, text, x, y):
 
 def predict(test_img):
 	img = test_img.copy()
-	#face, rect = detect_face(img)
-	#########################################
+	
 	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 	face_cascade = cv2.CascadeClassifier('opencv-files/lbpcascade_frontalface.xml')
@@ -104,14 +94,7 @@ def predict(test_img):
 		label_text = subjects[label]
 		draw_rectangle(img, rect)
 		draw_text(img, label_text, rect[0], rect[1]-5)
-	#####################################
-	'''
-	label,predicted_confidence= face_recognizer.predict(face)
-	label_text = subjects[label]
-
-	draw_rectangle(img, rect)
-	draw_text(img, label_text, rect[0], rect[1]-5)
-	'''
+	
 	return img
 
 
@@ -134,21 +117,5 @@ while(1):
 	if k == 27:
 		break
 
-cv2.destroyAllWindows()
 
-test_img1 = cv2.imread("test-data/test1.jpg")
-test_img2 = cv2.imread("test-data/test2.jpg")
-test_img3 = cv2.imread("test-data/test3.jpg")
- 
-#perform a prediction
-#predicted_img1 = predict(test_img1)
-#predicted_img2 = predict(test_img2)
-#predicted_img3 = predict(test_img3)
-print("Prediction complete")
- 
-#display both images
-#cv2.imshow(subjects[1], predicted_img1)
-#cv2.imshow(subjects[0], predicted_img2)
-#cv2.imshow(subjects[2], predicted_img3)
-cv2.waitKey(0)
 cv2.destroyAllWindows()
